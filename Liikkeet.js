@@ -10,7 +10,7 @@ import { StyleSheet, Text, View, Button, FlatList, TextInput } from 'react-nativ
 //   url: 'https://exercisedb.p.rapidapi.com/exercises',
 //   headers: {
 //     'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-//     'X-RapidAPI-Key': '7ff04451a0msh353f13e35d9d2f6p18a39ejsn6a71579b408c'
+//     'X-RapidAPI-Key': ''
 //   }
 // };
 
