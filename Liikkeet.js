@@ -38,7 +38,7 @@ export default function Liikkeet({navigation}) {
     method: 'GET',
     headers: {
       'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-      'X-RapidAPI-Key': '7ff04451a0msh353f13e35d9d2f6p18a39ejsn6a71579b408c' //oma api-key
+      'X-RapidAPI-Key': '' //oma api-key
     }
   };
 
