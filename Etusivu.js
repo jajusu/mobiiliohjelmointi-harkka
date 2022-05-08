@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Button, ImageBackground,TouchableOpacity } from 'react-native';
 import kuva from "./kuva2.jpg";
 
-
 export default function Etusivu({navigation}) {
+
+    //custom button
     const AppButton = ({ onPress, title }) => (
         <TouchableOpacity onPress={onPress} style={styles.appButtonContainer}>
           <Text style={styles.appButtonText}>{title}</Text>
@@ -36,13 +37,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width:'100%'
   },
-  appButtonContainer: {
+  appButtonContainer: { //custom button
     elevation: 8,
     // backgroundColor: "#009688",
     paddingVertical: 10,
     paddingHorizontal: 12,
   },
-  appButtonText: {
+  appButtonText: { //custom button
     fontSize: 18,
     color: "#fff",
     fontWeight: "bold",

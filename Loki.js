@@ -2,12 +2,12 @@ import { StyleSheet, View, FlatList} from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import { List } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
-import { Button, Text, Icon, Input, ListItem } from'react-native-elements';
+import {Text, ListItem } from'react-native-elements';
 
 const db = SQLite.openDatabase('itemdb.db');
 
 export default function HomeScreen({ navigation }) {
-  //alla olevat accordioniin
+  // accordion
   const [expanded, setExpanded] = useState();
   const handlePress = (id) => {
     if (id != expanded){
@@ -18,7 +18,8 @@ export default function HomeScreen({ navigation }) {
   }
 
   const [treeni, setTreeni] = useState('');
-  const [lista, setLista] = useState([]);
+
+  //create table
   useEffect(() => {
     db.transaction(tx => {
       tx.executeSql('create table if not exists session (id integer primary key not null, date text, workout text);');
@@ -34,6 +35,7 @@ export default function HomeScreen({ navigation }) {
     });
   }
 
+  // Parse from JSON all different exercises
   const editWorkoutStyle = (workout) =>{
     console.log("edittiä");
     //console.log(workout);
@@ -43,10 +45,14 @@ export default function HomeScreen({ navigation }) {
     let palauta="";
     for (let i = 0; i < obj.length; i++) {
       // console.log(obj[i].name);
-      palauta=palauta+obj[i].name + ", weight: " + obj[i].weight + "kg, sets: " + obj[i].sets +", reps: " + obj[i].sets+"\n";
+      let nimi=obj[i].name.toUpperCase();
+      if (obj[i].comments==""){
+        palauta=palauta + nimi + "\nweight: " + obj[i].weight + " kg, sets: " + obj[i].sets +", reps: " + obj[i].reps+"\n\n";
+      }else{
+        palauta=palauta + nimi + "\nweight: " + obj[i].weight + " kg, sets: " + obj[i].sets +", reps: " + obj[i].reps+"\ncomments: "+obj[i].comments+"\n\n";
+      }
     }
     return palauta;
-
   }
 
   return (
@@ -57,19 +63,16 @@ export default function HomeScreen({ navigation }) {
         renderItem={({item}) => 
           <ListItem bottomDivider>
             <ListItem.Content>
-              <View style={styles.listitems}>
-                <View style={styles.listnames}>
+              <View style={styles.listnames}>
                   {/* <ListItem.Title>{item.date}</ListItem.Title>
                   <ListItem.Subtitle>{editWorkoutStyle(item.workout)}</ListItem.Subtitle> */}
-                  <List.Section style={styles.accordion}>
-                 <List.Accordion
-                  title={item.date}
-                  expanded={item.id==expanded}
-                  onPress={() => handlePress(item.id)}>
-                    <Text>{editWorkoutStyle(item.workout)}</Text>
-                  </List.Accordion>
-                </List.Section>
-                </View>
+                    <List.Accordion
+                      left={props => <List.Icon {...props} icon="weight-lifter" />}
+                      title={item.date}
+                      expanded={item.id==expanded}
+                      onPress={() => handlePress(item.id)}>
+                      <Text style={styles.teksti}>{editWorkoutStyle(item.workout)}</Text>
+                    </List.Accordion>
               </View>
             </ListItem.Content>
           </ListItem>
@@ -79,33 +82,23 @@ export default function HomeScreen({ navigation }) {
     </View>  
   );
 }
+
 const styles = StyleSheet.create({
-  container: {
-   flex: 1,
-   backgroundColor: '#fff',
-   alignItems: 'center',
-  },
   listcontainer: {
-   paddingTop:10,
-   backgroundColor: '#fff',
    width:'100%',
+   backgroundColor: '#fff',
   },
   listitems:{
     flexDirection:'row',
   },
   listnames:{
-   paddingTop:5,
-   width:'80%',
-   paddingBottom:5
+   width:'100%',
   },
-  deletebutton:{ 
+  accordion:{
+
   },
-  button:{
-   alignItems: "center",
-   backgroundColor: "#DDDDDD",
-   padding: 10
+  teksti:{
+    paddingTop:10,
+    paddingLeft:75,
   }
-
-
-
 });

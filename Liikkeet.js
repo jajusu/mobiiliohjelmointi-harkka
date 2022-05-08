@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { List } from 'react-native-paper';
+import React, { useState } from 'react';
+import { List, RadioButton } from 'react-native-paper';
 import { StyleSheet, Text, View, FlatList, TextInput, Image, Keyboard } from 'react-native';
 import { Button, Icon} from'react-native-elements';
-
 
 export default function Liikkeet({navigation}) {
   
   const [hakusana, setHakusana] = useState('');
   const [liikkeet, setLiikkeet] = useState([]);
-  // const [viesti, setViesti] = useState('');
 
-  //alla olevat accordioniin
+  //radiobutton
+  const [radiovalue, setRadiovalue] = useState('name');
+
+  //accordion
   const [expanded, setExpanded] = useState();
   const handlePress = (id) => {
     if (id != expanded){
@@ -24,31 +25,41 @@ export default function Liikkeet({navigation}) {
     method: 'GET',
     headers: {
       'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-      'X-RapidAPI-Key': '' //oma api-key
+      'X-RapidAPI-Key': '' //api-key
     }
   };
 
-  const haeLiikkeet =() => {
-    let haku=hakusana.toLowerCase(); //apissa haut pienellä, joten muutetaan kirjaimet pieneksi
-    if (haku==""){ //jos ei hakusanaa, haetaan kaikki
-      fetch(`https://exercisedb.p.rapidapi.com/exercises`, options)
-      .then(res => res.json())
-      .then(json => {setLiikkeet(json);console.log(json)})
-      .catch(err => console.error('error:' + err));
-    }else{ //jos hakusana, haetaan sillä
-      fetch(`https://exercisedb.p.rapidapi.com/exercises/name/${haku}`, options)
-        .then(res => res.json())
-        .then(json => setLiikkeet(json))
-        .then(console.log(liikkeet))
-        // .then(setViesti(""))
-        .catch(err => console.error('error:' + err));
+  const fetchExercises =() => {
+    let haku=hakusana.toLowerCase(); //api searches with lowercase
+    let hakuUrl=''
+    console.log("radio",radiovalue); 
+    if (radiovalue=='body'){ //if searching exercises for bodypart
+      if (haku==""){ //if no searchword, fetch all exercises
+        hakuUrl='https://exercisedb.p.rapidapi.com/exercises'
+      }else{ //if searchword, use it
+        hakuUrl=`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${haku}`
+      }
     }
+    if (radiovalue=='name'){ //if searching exercises by name
+      if (haku==""){ //if no searchword, fetch all exercises
+        hakuUrl='https://exercisedb.p.rapidapi.com/exercises'
+      }else{ //if searchword, use it
+        hakuUrl=`https://exercisedb.p.rapidapi.com/exercises/name/${haku}`
+      }
+    }
+    fetch(hakuUrl, options)
+    .then(res => res.json())
+    .then(json => {setLiikkeet(json);console.log(json)})
+    .then(console.log(liikkeet))
+    // .then(setViesti(""))
+    .catch(err => console.error('error:' + err));
     Keyboard.dismiss();
   }
 
-  useEffect(() => {
-    haeLiikkeet();
-  }, []);
+  //fetch at the page load
+  // useEffect(() => {
+  //   fetchExercises();
+  // }, []);
 
     return (
       <View style={{flex:1, alignItems: 'center', justifyContent: 'center' }}>
@@ -56,27 +67,33 @@ export default function Liikkeet({navigation}) {
           style={styles.input}
           onChangeText={setHakusana}
           value={hakusana}
-          placeholder="Exercise name"
+          placeholder="Search"
         />
-        <Button onPress={haeLiikkeet} 
-        title="  SEARCH"
-        buttonStyle={{
-          width:180
-        }}
-        icon={
-          <Icon
-            name="search"
-            color="white"
-          />
-        } 
+        <Text style={styles.radiotitle}>Search by:</Text>
+        <RadioButton.Group onValueChange={value => setRadiovalue(value)} value={radiovalue} >
+          <View style={styles.radio}>
+            <RadioButton.Item color="#2196F3" label="Name" value="name" />
+            <RadioButton.Item color="#2196F3" style={styles.radio} label="Body part" value="body" />
+          </View>
+        </RadioButton.Group>
+        <Button onPress={fetchExercises} 
+          title="  SEARCH"
+          buttonStyle={{
+            width:220,
+            alignItems:'center'
+          }}
+          icon={
+            <Icon
+              name="search"
+              color="white"
+            />
+          } 
         />
-        {/* <Text>{viesti}</Text> */}
         <FlatList 
           style={{marginLeft : "5%"}}
           keyExtractor={(item, index) => index.toString()} 
           renderItem={({item}) => 
             <View>
-              {/* <Text style={{fontSize: 18, fontWeight: "bold"}}>{item.name}</Text> */}
               <List.Section style={styles.accordion}>
                 <List.Accordion
                   title={item.name}
@@ -117,10 +134,16 @@ const styles = StyleSheet.create({
     width: 300,
   },
   image:{
-    //kuvan koon määritys
+    //picture size, important
     width:250,
     height: 250,
     borderColor:'red'
    },
+   radio:{
+     flexDirection:'row'
+  },
+   radiotitle:{
+     fontSize:16
+   }
 });
 
