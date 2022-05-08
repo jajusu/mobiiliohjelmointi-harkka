@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "harkka",
-    "slug": "harkka",
+    "name": "Training app",
+    "slug": "training-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +27,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Project work for Mobiiliohjelmointi (React Native) course. Training app, that you can use to log your training sessions, check sessions from logs and search Exercise DB to find new exercises."
   }
 }

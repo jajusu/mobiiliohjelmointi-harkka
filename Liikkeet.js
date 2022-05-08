@@ -89,6 +89,8 @@ export default function Liikkeet({navigation}) {
             />
           } 
         />
+        <Text></Text>
+        <Text>Search is not working without API-key!</Text>
         <FlatList 
           style={{marginLeft : "5%"}}
           keyExtractor={(item, index) => index.toString()} 
