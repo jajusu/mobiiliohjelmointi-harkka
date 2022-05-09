@@ -6,7 +6,7 @@ import {Text, ListItem } from'react-native-elements';
 
 const db = SQLite.openDatabase('itemdb.db');
 
-export default function HomeScreen({ navigation }) {
+export default function Loki({ navigation }) {
   // accordion
   const [expanded, setExpanded] = useState();
   const handlePress = (id) => {

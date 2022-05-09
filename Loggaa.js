@@ -5,7 +5,7 @@ import { Button, Text, Icon, Input, ListItem } from'react-native-elements';
 
 const db = SQLite.openDatabase('itemdb.db');
 
-export default function App() {
+export default function Loggaa() {
   const [name, setName] = useState('');
   const [sets, setSets] = useState('');
   const [reps, setReps] = useState('');
